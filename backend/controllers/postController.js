@@ -1,6 +1,6 @@
 const fs = require("fs");
-const models = require("../models");
-require("dotenv").config();
+const models = require("../models"); // Import the models package
+require("dotenv").config(); //  Import the dotenv package
 
 module.exports = {
   createPost: (req, res, next) => { // Create a new post

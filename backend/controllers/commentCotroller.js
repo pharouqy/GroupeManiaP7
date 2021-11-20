@@ -1,6 +1,6 @@
 const fs = require("fs");
-const models = require("../models");
-require("dotenv").config();
+const models = require("../models"); // Import the models package
+require("dotenv").config(); //  Import the dotenv package
 
 module.exports = {
   createComment: (req, res, next) => { //create comment
@@ -19,6 +19,7 @@ module.exports = {
         res.status(500).json(error);
       });
   },
+
   getAllComments: (req, res, next) => { //get all comments
     models.Comment.findAll({
       attributes: ["id", "content", "idUSERS", "idPOSTS"],
@@ -34,7 +35,9 @@ module.exports = {
         res.status(500).json(error);
       });
   },
-  //getOneComment: (req, res, next) => {}, //TODO
+
+  getComment: (req, res, next) => {}, //TODO
+
   updateComment: (req, res, next) => { // updateComment
     const commentId = req.params.idComment;
     const { content } = req.body;
@@ -57,6 +60,7 @@ module.exports = {
         res.status(500).json(error);
       });
   },
+
   deleteComment: (req, res, next) => { //deleteComment
     const commentId = req.params.idComment;
     models.Comment.destroy({
@@ -73,4 +77,5 @@ module.exports = {
         res.status(500).json(error);
       });
   },
+
 };

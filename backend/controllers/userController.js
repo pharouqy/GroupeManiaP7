@@ -1,8 +1,8 @@
-const jwt = require("jsonwebtoken");
-const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken"); // Import the jsonwebtoken package
+const bcrypt = require("bcrypt"); // Import the bcrypt package
 const fs = require("fs");
-const models = require("../models");
-require("dotenv").config();
+const models = require("../models"); // Import the models package
+require("dotenv").config(); //  Import the dotenv package
 
 module.exports = {
   register: (req, res, next) => {

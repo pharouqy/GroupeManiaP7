@@ -1,5 +1,5 @@
-const models = require("../models");
-const jwt = require("jsonwebtoken");
+const models = require("../models"); // Import the models package
+const jwt = require("jsonwebtoken"); // Import the jsonwebtoken package
 
 module.exports = {
   likePost: (req, res, next) => { // likePost
