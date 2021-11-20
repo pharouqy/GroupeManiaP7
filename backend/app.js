@@ -6,7 +6,7 @@ const path = require("path");
 const userRouter = require("./routes/userRoutes");
 const postRouter = require("./routes/postRoutes");
 const commentRouter = require("./routes/commentRoutes");
-//const likeDeslikeRouter = require("./routes/likeDeslikeRoutes");
+const likeDeslikeRouter = require("./routes/likeDeslikeRoutes");
 
 const app = express();
 
@@ -34,6 +34,6 @@ app.use("/images", express.static(path.join(__dirname, "images")));
 app.use("/api", userRouter);
 app.use("/api/post", postRouter);
 app.use("/api/comments", commentRouter);
-//app.use("/api/likeDeslike", likeDeslikeRouter);
+app.use("/api/likeDeslike", likeDeslikeRouter);
 
 module.exports = app;

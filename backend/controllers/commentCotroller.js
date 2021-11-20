@@ -3,7 +3,7 @@ const models = require("../models");
 require("dotenv").config();
 
 module.exports = {
-  createComment: (req, res, next) => {
+  createComment: (req, res, next) => { //create comment
     const userId = req.params.id;
     const postId = req.params.idPost;
     const { content } = req.body;
@@ -19,7 +19,7 @@ module.exports = {
         res.status(500).json(error);
       });
   },
-  getAllComments: (req, res, next) => {
+  getAllComments: (req, res, next) => { //get all comments
     models.Comment.findAll({
       attributes: ["id", "content", "idUSERS", "idPOSTS"],
     })
@@ -34,7 +34,7 @@ module.exports = {
         res.status(500).json(error);
       });
   },
-  //getOneComment: (req, res, next) => {},
+  //getOneComment: (req, res, next) => {}, //TODO
   updateComment: (req, res, next) => { // updateComment
     const commentId = req.params.idComment;
     const { content } = req.body;
