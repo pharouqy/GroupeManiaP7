@@ -9,9 +9,9 @@ const authCtrl = require("../middelware/authCtrl");
 const authPost = require("../middelware/authPost");
 
 router.post("/new/:id", authCtrl, /*checkPostInput,*/ multer, postCtrl.createPost); // Create a new post
-router.get("/:idPost/:id", authCtrl, postCtrl.getPost); // Get a post
+router.get("/:idPost/", postCtrl.getPost); // Get a post
 router.get("/", postCtrl.getAllPosts); // Get all posts
-router.delete("/:idPost/:id", authCtrl, authPost, postCtrl.deletePost); // Delete a post
-router.put("/:idPost/:id", authCtrl, /*checkPostInput,*/authPost, multer, postCtrl.updatePost); // Update a post
+router.delete("/:idPost/", authPost, postCtrl.deletePost); // Delete a post
+router.put("/:idPost/", /*checkPostInput,*/authPost, multer, postCtrl.updatePost); // Update a post
 
 module.exports = router;

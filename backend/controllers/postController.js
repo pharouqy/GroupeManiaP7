@@ -112,7 +112,7 @@ module.exports = {
         });
       });
   },
-  updatePost: (req, res, next) => {
+  updatePost: (req, res, next) => { // Update post by id
     const postId = req.params.idPost;
     const { title, content } = req.body;
     models.Post.findOne({

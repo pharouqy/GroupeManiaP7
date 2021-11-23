@@ -5,7 +5,7 @@ const models = require("../models"); // Import the models package
 require("dotenv").config(); //  Import the dotenv package
 
 module.exports = {
-  register: (req, res, next) => {
+  register: (req, res, next) => { //register user
     // register a new user
     const { email, password, username, biography } = req.body;
     models.User.findOne({
@@ -51,7 +51,7 @@ module.exports = {
         });
       });
   },
-  login: (req, res) => {
+  login: (req, res) => { // login user
     // login a user
     const { email, password } = req.body;
     models.User.findOne({
@@ -93,18 +93,21 @@ module.exports = {
         }
       });
   },
-  logout: (req, res) => {
+  logout: (req, res) => { // logout user
     // logout a user
     res.clearCookie("jwt");
     res.status(200).json({
       message: "User logged out",
     });
   },
-  getUser: (req, res) => {
+  getUser: (req, res) => { // get user
     // get a user
-    const userId = req.params.id;
+    const headerAuth = req.headers["authorization"];
+    const token = headerAuth.replace("Bearer ", "");
+    const decoded = jwt.verify(token, process.env.SECRET_TOKEN);
+    const userId = decoded.id;
     models.User.findOne({
-      attributes: ["id", "username", "email", "biography", "isAdmin"],
+      attributes: ["id", "username", "email","image", "biography", "isAdmin"],
       where: { id: userId },
     })
       .then((userFound) => {
@@ -114,6 +117,7 @@ module.exports = {
             id: userFound.id,
             email: userFound.email,
             username: userFound.username,
+            image: userFound.image,
             biography: userFound.biography,
             isAdmin: userFound.isAdmin,
           });
@@ -131,7 +135,7 @@ module.exports = {
         }
       });
   },
-  getAllUsers: (req, res) => {
+  getAllUsers: (req, res) => { // get all users
     // get all users
     models.User.findAll({
       attributes: ["id", "username", "image", "email", "biography"],
@@ -156,7 +160,7 @@ module.exports = {
         }
       });
   },
-  updateUser: (req, res) => {
+  updateUser: (req, res) => { // update user
     // update a user
     const userId = req.params.id;
     models.User.findOne({
@@ -201,7 +205,7 @@ module.exports = {
         }
       });
   },
-  deleteUser: (req, res) => {
+  deleteUser: (req, res) => { // delete user
     // delete a user
     const userId = req.params.id;
     models.User.findOne({

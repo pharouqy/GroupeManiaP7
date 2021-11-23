@@ -1,10 +1,14 @@
 const fs = require("fs");
+const jwt = require("jsonwebtoken");
 const models = require("../models"); // Import the models package
 require("dotenv").config(); //  Import the dotenv package
 
 module.exports = {
   createComment: (req, res, next) => { //create comment
-    const userId = req.params.id;
+    const headerAuth = req.headers["authorization"];
+    const token = headerAuth.replace("Bearer ", "");
+    const decoded = jwt.verify(token, process.env.SECRET_TOKEN);
+    const userId = decoded.id;
     const postId = req.params.idPost;
     const { content } = req.body;
     models.Comment.create({
@@ -20,9 +24,13 @@ module.exports = {
       });
   },
 
-  getAllComments: (req, res, next) => { //get all comments
+  getAllComments: (req, res, next) => { //get all comments per post
+    const postId = req.params.idPost;
     models.Comment.findAll({
       attributes: ["id", "content", "idUSERS", "idPOSTS"],
+      where: {
+        idPOSTS: postId,
+      },
     })
       .then((commentsFound) => {
         if (commentsFound) {
@@ -36,7 +44,7 @@ module.exports = {
       });
   },
 
-  getComment: (req, res, next) => {}, //TODO
+  //getComment: (req, res, next) => {}, //TODO
 
   updateComment: (req, res, next) => { // updateComment
     const commentId = req.params.idComment;
