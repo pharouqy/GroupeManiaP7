@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import UserService from "../services/user.service";
+import axios from "axios";
 
 export default {
   name: "User",
@@ -23,19 +23,10 @@ export default {
     };
   },
   mounted() {
-    UserService.getUserBoard().then(
-      (response) => {
-        this.content = response.data;
-      },
-      (error) => {
-        this.content =
-          (error.response &&
-            error.response.data &&
-            error.response.data.message) ||
-          error.message ||
-          error.toString();
-      }
-    );
+    axios
+      .get("http://localhost:3000/api/profil")
+      .then((response) => (this.content = response.data))
+      .catch((error) => console.log(error));
   },
 };
 </script>

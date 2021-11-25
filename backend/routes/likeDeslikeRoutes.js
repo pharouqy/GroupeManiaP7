@@ -3,8 +3,9 @@ const router = express.Router();
 
 const likeDeslikeCtrl = require("../controllers/likeDeslikeController");
 const likeDeslikeOnes = require("../middelware/likeDeslikeOnes");
+const authCookieCtrl = require("../middelware/authCookies");
 
-router.post("/:idPost/like", likeDeslikeOnes, likeDeslikeCtrl.likePost);
-router.post("/:idPost/deslike", likeDeslikeCtrl.deslikePost);
+router.post("/:idPost/like", authCookieCtrl, likeDeslikeOnes, likeDeslikeCtrl.likePost);
+router.post("/:idPost/deslike", authCookieCtrl, likeDeslikeCtrl.deslikePost);
 
 module.exports = router;   // Export the router

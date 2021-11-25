@@ -7,11 +7,12 @@ const postCtrl = require("../controllers/postController");
 const checkPostInput = require("../middelware/checkInputPost");
 const authCtrl = require("../middelware/authCtrl");
 const authPost = require("../middelware/authPost");
+const authCookieCtrl = require("../middelware/authCookies");
 
-router.post("/new/:id", authCtrl, /*checkPostInput,*/ multer, postCtrl.createPost); // Create a new post
+router.post("/new/:id", authCookieCtrl, authCtrl, /*checkPostInput,*/ multer, postCtrl.createPost); // Create a new post
 router.get("/:idPost/", postCtrl.getPost); // Get a post
 router.get("/", postCtrl.getAllPosts); // Get all posts
-router.delete("/:idPost/", authPost, postCtrl.deletePost); // Delete a post
-router.put("/:idPost/", /*checkPostInput,*/authPost, multer, postCtrl.updatePost); // Update a post
+router.delete("/:idPost/", authCookieCtrl, authPost, postCtrl.deletePost); // Delete a post
+router.put("/:idPost/", authCookieCtrl, /*checkPostInput,*/authPost, multer, postCtrl.updatePost); // Update a post
 
 module.exports = router;

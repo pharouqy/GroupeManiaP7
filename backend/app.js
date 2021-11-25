@@ -1,6 +1,6 @@
 const express = require("express");
 const helmet = require("helmet");
-var cookieParser = require('cookie-parser');
+var cookieParser = require("cookie-parser");
 require("dotenv").config();
 const path = require("path");
 const userRouter = require("./routes/userRoutes");
@@ -17,10 +17,7 @@ app.use(cookieParser());
 
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content, Accept, Content-Type, Authorization"
-  );
+  res.setHeader("Access-Control-Allow-Headers","Origin, X-Requested-With, Content, Accept, Content-Type, Authorization, Set-coockies");
   res.setHeader(
     "Access-Control-Allow-Methods",
     "GET, POST, PUT, DELETE, PATCH, OPTIONS"
@@ -29,7 +26,6 @@ app.use((req, res, next) => {
 });
 
 app.use("/images", express.static(path.join(__dirname, "images")));
-
 
 app.use("/api", userRouter);
 app.use("/api/post", postRouter);

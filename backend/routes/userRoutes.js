@@ -8,13 +8,14 @@ const emailCtrl = require("../middelware/checkEmail");
 const passwordCtrl = require("../middelware/checkPassword");
 const inputCtrl = require("../middelware/checkInput");
 const authCtrl = require("../middelware/authCtrl");
+const authCookieCtrl = require("../middelware/authCookies");
 
 router.post("/register",inputCtrl, emailCtrl, passwordCtrl, userCtrlr.register); //register
 router.post("/login", userCtrlr.login); //login
-router.get("/logout/", userCtrlr.logout); //logout
-router.get("/profil/", userCtrlr.getUser); //get user
+router.get("/logout", userCtrlr.logout); //logout
+router.get("/profil", userCtrlr.getUser); //get user
 router.get("/profils/", userCtrlr.getAllUsers); //get all users
-router.put("/profil/:id", authCtrl, multer, userCtrlr.updateUser); //update user
-router.delete('/profil/:id', authCtrl, userCtrlr.deleteUser); //delete user
+router.put("/profil/:id", authCookieCtrl, authCtrl, multer, userCtrlr.updateUser); //update user
+router.delete('/profil/:id', authCookieCtrl, authCtrl, userCtrlr.deleteUser); //delete user
 
 module.exports = router;

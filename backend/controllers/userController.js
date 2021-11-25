@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken"); // Import the jsonwebtoken package
 const bcrypt = require("bcrypt"); // Import the bcrypt package
-const fs = require("fs");
+const fs = require("fs"); //
 const models = require("../models"); // Import the models package
 require("dotenv").config(); //  Import the dotenv package
 
@@ -55,9 +55,11 @@ module.exports = {
     // login a user
     const { email, password } = req.body;
     models.User.findOne({
+      attributes: ["id", "username", "email", "password", "isAdmin"],
       where: { email: email },
     })
       .then((userFound) => {
+        console.log(userFound);
         if (userFound) {
           if (bcrypt.compareSync(password, userFound.password)) {
             const token = jwt.sign(
@@ -68,11 +70,14 @@ module.exports = {
               process.env.SECRET_TOKEN,
               { expiresIn: "24h" }
             );
-            res.cookie("jwt", token);
-            res.status(200).json({
+            res.status(200).cookie('token', token, { maxAge: 900000, httpOnly: false }).json({
               message: "User logged in",
               token: token,
             });
+            /*res.status(200).json({
+              message: "User logged in",
+              token: token,
+            });*/
           } else {
             //wrong password
             res.status(401).json({
@@ -95,15 +100,14 @@ module.exports = {
   },
   logout: (req, res) => { // logout user
     // logout a user
-    res.clearCookie("jwt");
+    res.clearCookie("token");
     res.status(200).json({
       message: "User logged out",
     });
   },
   getUser: (req, res) => { // get user
     // get a user
-    const headerAuth = req.headers["authorization"];
-    const token = headerAuth.replace("Bearer ", "");
+    const token = req.cookies.token;
     const decoded = jwt.verify(token, process.env.SECRET_TOKEN);
     const userId = decoded.id;
     models.User.findOne({

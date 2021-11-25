@@ -5,8 +5,7 @@ require("dotenv").config(); //  Import the dotenv package
 
 module.exports = {
   createComment: (req, res, next) => { //create comment
-    const headerAuth = req.headers["authorization"];
-    const token = headerAuth.replace("Bearer ", "");
+    const token = req.cookies.token;
     const decoded = jwt.verify(token, process.env.SECRET_TOKEN);
     const userId = decoded.id;
     const postId = req.params.idPost;

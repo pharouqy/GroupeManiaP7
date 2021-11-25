@@ -12,6 +12,12 @@ class AuthService {
       .then((response) => {
         if (response.data.token) {
           localStorage.setItem("user", JSON.stringify(response.data));
+          //console.log("cookies", decodeURIComponent(document.cookie));
+          /*console.log(response.data.token);
+          const d = new Date();
+          d.setTime(d.getTime() + 24 * 60 * 60 * 1000);
+          let expires = "expires=" + d.toUTCString();*/
+          //document.cookie = "token" + "=" + response.data.token + ";" + expires + ";path=/";
         }
 
         return response.data;
