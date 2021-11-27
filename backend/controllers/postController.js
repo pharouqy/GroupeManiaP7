@@ -1,11 +1,14 @@
 const fs = require("fs");
+const jwt = require("jsonwebtoken");
 const models = require("../models"); // Import the models package
 require("dotenv").config(); //  Import the dotenv package
 
 module.exports = {
   createPost: (req, res, next) => { // Create a new post
+    const token = req.cookies.token;
+    const decoded = jwt.verify(token, process.env.SECRET_TOKEN);
+    const userId = decoded.id;
     const { title, content } = req.body;
-    const userId = req.params.id;
     models.User.findOne({
       where: { id: userId },
     }).then((userFound) => {

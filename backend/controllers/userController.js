@@ -70,14 +70,11 @@ module.exports = {
               process.env.SECRET_TOKEN,
               { expiresIn: "24h" }
             );
-            res.status(200).cookie('token', token, { maxAge: 900000, httpOnly: false }).json({
+            res.status(200).cookie('token', token, { maxAge: 900000, httpOnly: true })
+            res.status(200).json({
               message: "User logged in",
               token: token,
             });
-            /*res.status(200).json({
-              message: "User logged in",
-              token: token,
-            });*/
           } else {
             //wrong password
             res.status(401).json({
@@ -108,6 +105,7 @@ module.exports = {
   getUser: (req, res) => { // get user
     // get a user
     const token = req.cookies.token;
+    console.log(token);
     const decoded = jwt.verify(token, process.env.SECRET_TOKEN);
     const userId = decoded.id;
     models.User.findOne({

@@ -1,4 +1,4 @@
-# groupemania
+# frontend
 
 ## Project setup
 ```
