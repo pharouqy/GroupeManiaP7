@@ -1,7 +1,7 @@
 <template>
   <Nav />
   <main class="form-signin">
-    <router-view />
+    <router-view :key="$route.fullPath" />
   </main>
 </template>
 

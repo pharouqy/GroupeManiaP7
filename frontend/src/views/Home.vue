@@ -29,6 +29,7 @@ export default {
   },
   beforeMount() {
     this.getName();
+
   },
   methods: {
     async getName() {

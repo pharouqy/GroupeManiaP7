@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="row">
-      <form @submit.prevent="submit">
+      <form @submit.prevent="submit" enctype="multipart/form-data">
         <div class="col-md-12 col-md-offset-2">
           <div class="input-group input-group-lg">
             <div class="input-group-prepend">
@@ -33,11 +33,12 @@
             </div>
             <div class="custom-file">
               <input
-                v-on:change="previewFiles"
+                v-on:change="selectFile"
                 type="file"
                 class="custom-file-input"
                 id="inputGroupFile01"
                 name="post_image"
+                ref="file"
               />
               <label class="custom-file-label" for="inputGroupFile01"
                 >Choose file</label
@@ -45,7 +46,7 @@
             </div>
           </div>
           <button class="w-100 btn btn-lg btn-primary" type="submit">
-            Submit
+            Send
           </button>
         </div>
       </form>
@@ -54,38 +55,44 @@
 </template>
 
 <script>
-import { reactive } from "vue";
-
+import axios from "axios";
 export default {
   name: "CreatePost",
-  methods: {
-    previewFiles(event) {
-      console.log(event.target.files);
-    },
-  },
-  setup() {
-    const data = reactive({
-      title: "",
-      content: "",
-      previewFiles: "",
-    });
-
-    const submit = async () => {
-      console.log(data);
-      await fetch("http://localhost:3000/api/post/new", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify(data),
-      });
-    };
-
+  data() {
     return {
-      data,
-      submit,
+      data: {
+        title: "",
+        content: "",
+        image: "",
+      },
     };
+  },
+  methods: {
+    selectFile(e) {
+      this.data.image = e.target.files[0];
+    },
+    async submit() {
+      const formData = new FormData();
+      formData.append("title", this.data.title);
+      console.log(this.data.title);
+      formData.append("content", this.data.content);
+      console.log(this.data.content); 
+      this.data.image ? formData.append("post_image", this.data.image): formData.append("", ["Picture"]);
+      console.log(this.data.image);
+      await axios
+        .post("http://localhost:3000/api/post/new", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+          withCredentials: true,
+        })
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
   },
 };
 </script>

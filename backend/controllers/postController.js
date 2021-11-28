@@ -1,14 +1,16 @@
-const fs = require("fs");
 const jwt = require("jsonwebtoken");
+const fs = require("fs");
 const models = require("../models"); // Import the models package
 require("dotenv").config(); //  Import the dotenv package
 
 module.exports = {
-  createPost: (req, res, next) => { // Create a new post
+  createPost: (req, res, next) => {
+    // Create a new post
     const token = req.cookies.token;
     const decoded = jwt.verify(token, process.env.SECRET_TOKEN);
     const userId = decoded.id;
     const { title, content } = req.body;
+    console.log(req.files);
     models.User.findOne({
       where: { id: userId },
     }).then((userFound) => {
@@ -17,11 +19,7 @@ module.exports = {
           idUSERS: userFound.id,
           title: title,
           content: content,
-          image: req.files
-            ? `${req.protocol}://${req.get("host")}/images/posts/${
-                req.files["post_image"][0].filename
-              }`
-            : null,
+          image: req.files ? `${req.protocol}://${req.get("host")}/images/posts/${req.files["post_image"][0].filename}` : null,
           isLike: 0,
         })
           .then((post) => {
@@ -43,7 +41,8 @@ module.exports = {
       }
     });
   },
-  getPost: (req, res, next) => { // Get post by id
+  getPost: (req, res, next) => {
+    // Get post by id
     const postId = req.params.idPost;
     console.log(postId);
     models.Post.findOne({
@@ -69,7 +68,8 @@ module.exports = {
         });
       });
   },
-  getAllPosts: (req, res, next) => { // Get all posts
+  getAllPosts: (req, res, next) => {
+    // Get all posts
     models.Post.findAll({
       attributes: ["id", "title", "content", "image", "isLike"],
     })
@@ -92,7 +92,8 @@ module.exports = {
         });
       });
   },
-  deletePost: (req, res, next) => { // Delete post by id
+  deletePost: (req, res, next) => {
+    // Delete post by id
     const postId = req.params.idPost;
     models.Post.destroy({
       where: { id: postId },
@@ -115,7 +116,8 @@ module.exports = {
         });
       });
   },
-  updatePost: (req, res, next) => { // Update post by id
+  updatePost: (req, res, next) => {
+    // Update post by id
     const postId = req.params.idPost;
     const { title, content } = req.body;
     models.Post.findOne({
@@ -123,11 +125,16 @@ module.exports = {
       where: { id: postId },
     }).then((postFound) => {
       if (postFound) {
-        postFound.update({
-          title: title,
-          content: content,
-          image: req.files ? `${req.protocol}://${req.get("host")}/images/posts/${req.files["post_image"][0].filename}` : postFound.image,
-        })
+        postFound
+          .update({
+            title: title,
+            content: content,
+            image: req.files
+              ? `${req.protocol}://${req.get("host")}/images/posts/${
+                  req.files["post_image"][0].filename
+                }`
+              : postFound.image,
+          })
           .then((postUpdated) => {
             res.status(200).json({
               message: "Post updated",

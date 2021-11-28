@@ -70,7 +70,7 @@ module.exports = {
               process.env.SECRET_TOKEN,
               { expiresIn: "24h" }
             );
-            res.status(200).cookie('token', token, { maxAge: 900000, httpOnly: true })
+            res.status(200).cookie('token', token, { maxAge: 9000000, httpOnly: false })
             res.status(200).json({
               message: "User logged in",
               token: token,
