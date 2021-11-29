@@ -3,6 +3,7 @@ import Home from '../views/Home.vue'
 import Register from '../views/Register.vue'
 import Login from '../views/Login.vue'
 import Profile from '../views/Profile.vue'
+import UpdatePoste from '../views/UpdatePoste.vue'
 
 
 const routes: Array<RouteRecordRaw> = [
@@ -21,6 +22,11 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/Profile',
     component: Profile,
+  },
+  {
+    path: '/UpdatePoste/:idPost',
+    component: UpdatePoste,
+    props: true,
   },
 ]
 

@@ -10,16 +10,21 @@ module.exports = {
     const decoded = jwt.verify(token, process.env.SECRET_TOKEN);
     const userId = decoded.id;
     const { title, content } = req.body;
-    console.log(req.files);
+
     models.User.findOne({
       where: { id: userId },
     }).then((userFound) => {
+      console.log("req", req.files);
       if (userFound) {
         models.Post.create({
           idUSERS: userFound.id,
           title: title,
           content: content,
-          image: req.files ? `${req.protocol}://${req.get("host")}/images/posts/${req.files["post_image"][0].filename}` : null,
+          image: req.file
+            ? `${req.protocol}://${req.get("host")}/images/posts/${
+                req.file.filename
+              }`
+            : null,
           isLike: 0,
         })
           .then((post) => {
@@ -127,13 +132,14 @@ module.exports = {
       if (postFound) {
         postFound
           .update({
-            title: title,
-            content: content,
-            image: req.files
-              ? `${req.protocol}://${req.get("host")}/images/posts/${
-                  req.files["post_image"][0].filename
-                }`
-              : postFound.image,
+            title: title ? title : postFound.title,
+            content: content ? content : postFound.content,
+            image:
+              req.file
+                ? `${req.protocol}://${req.get("host")}/images/posts/${
+                    req.file.filename
+                  }`
+                : postFound.image,
           })
           .then((postUpdated) => {
             res.status(200).json({

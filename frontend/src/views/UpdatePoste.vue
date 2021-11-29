@@ -1,7 +1,8 @@
 <template>
   <div class="container">
     <div class="row">
-      <form @submit.prevent="submit" enctype="multipart/form-data">
+      <form @submit.prevent="update" enctype="multipart/form-data">
+        <!-- @submit.prevent="submit" -->
         <div class="col-md-12 col-md-offset-2">
           <div class="input-group input-group-lg">
             <div class="input-group-prepend">
@@ -46,7 +47,7 @@
             </div>
           </div>
           <button class="w-100 btn btn-lg btn-primary" type="submit">
-            Send
+            Update
           </button>
         </div>
       </form>
@@ -57,45 +58,46 @@
 <script>
 import axios from "axios";
 export default {
-  name: "CreatePost",
+  name: "UpdatePost",
   data() {
     return {
       data: {
         title: "",
         content: "",
-        image: "",
+        post_image: "",
       },
     };
   },
   methods: {
     selectFile(e) {
-      this.data.image = e.target.files[0];
+      this.data.post_image = e.target.files[0];
     },
-    async submit() {
+    update() {
       const formData = new FormData();
       formData.append("title", this.data.title);
-      console.log(this.data.title);
       formData.append("content", this.data.content);
-      console.log(this.data.content); 
-      formData.append("post_image", this.data.image);
-      console.log(this.data.image);
-      await axios
-        .post("http://localhost:3000/api/post/new", formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-          withCredentials: true,
-        })
+      formData.append("post_image", this.data.post_image);
+      axios
+        .put(
+          `http://localhost:3000/api/post/${this.$route.params.idPost}`,
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+            withCredentials: true,
+          }
+        )
         .then((response) => {
-          console.log(response);
+          //this.$router.push("/");
         })
-        .catch((err) => {
-          console.log(err);
+        .catch((error) => {
+          console.log(error);
         });
     },
   },
 };
 </script>
 
-<style>
+ <style scoped>
 </style>
