@@ -40,12 +40,18 @@ import { useRouter } from "vue-router";
 
 export default {
   name: "Nav",
+  computed: {
+    isLoggedIn() {
+      const store = useStore();
+      return store.state.authenticated;
+    }
+  },
   setup() {
     const router = useRouter();
-    const store = useStore();
+    /*const store = useStore();
     const isLoggedIn = computed(() => {
       return store.state.authenticated;
-    });
+    });*/
     const lougout = () => {
       fetch("http://localhost:3000/api/logout", {
         credentials: "include",
@@ -53,12 +59,13 @@ export default {
         .then((res) => res.json())
         .then((data) => {
           if (data.message) {
-            router.push("/");
+            console.log(data.message);
+            router.push("/Login");
           }
         });
     };
     return {
-      isLoggedIn,
+      //isLoggedIn,
       lougout,
     };
   },

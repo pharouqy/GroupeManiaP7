@@ -76,7 +76,7 @@ module.exports = {
   getAllPosts: (req, res, next) => {
     // Get all posts
     models.Post.findAll({
-      attributes: ["id", "idUSERS", "title", "content", "image", "isLike"],
+      attributes: ["id", "idUSERS", "title", "content", "image", "isLike", "createdAt"],
     })
       .then((postsFound) => {
         if (postsFound) {

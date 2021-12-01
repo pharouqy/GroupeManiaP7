@@ -3,8 +3,14 @@
     <div class="container">
       <div class="row" v-for="post in data.posts" v-bind:key="post.id">
         <div class="col-md-12 post">
-          <h1 v-for="user in donnee" v-bind:key="user.id"><img class="img-user" v-if="post.idUSERS === user.id" v-bind:src="user.image" alt=""><h5  v-if="post.idUSERS === user.id">{{user.username}}</h5></h1>
+          <div v-for="user in donnee" v-bind:key="user.id" >
+            <div v-if="post.idUSERS === user.id">
+              <img class="img-user"  v-bind:src="user.image" alt="">
+              <span>{{user.username}}</span>
+            </div>
+          </div>
           <img class="img-post" v-bind:src="post.image" alt="" />
+          <span>{{ post.createdAt }}</span>
           <h1>{{ post.title }}{{ post.idUSERS }}</h1>
           <p>
             {{ post.content }}
@@ -78,7 +84,6 @@ export default {
         })
         .then((response) => {
           this.donnee = response.data.users;
-          console.log(this.donnee);
         })
         .catch((error) => {
           console.log(error);

@@ -22,10 +22,14 @@ module.exports = (sequelize, DataTypes) => {
       models.Like.belongsTo(models.User, {
         foreignKey: "idPOSTS",
         as: "post",
+        onDelete: 'cascade',
+        hooks: true,
       });
       models.Like.belongsTo(models.Post, {
         foreignKey: "idUSERS",
         as: "user",
+        onDelete: 'cascade',
+        hooks: true,
       });
     }
   };
