@@ -1,17 +1,17 @@
 <template>
   <div class="container">
     <div class="row">
-      <form @submit.prevent="submit" enctype="multipart/form-data">
+      <form @submit.prevent="update" enctype="multipart/form-data">
         <div class="col-md-12 col-md-offset-2">
           <div class="input-group input-group-lg">
             <div class="input-group-prepend">
               <span class="input-group-text" id="inputGroup-sizing-lg"
-                >Title</span
+                >Email</span
               >
             </div>
             <input
-              type="text"
-              v-model="data.title"
+              type="email"
+              v-model="user.email"
               class="form-control"
               aria-label="Large"
               aria-describedby="inputGroup-sizing-sm"
@@ -19,10 +19,10 @@
           </div>
           <div class="input-group">
             <div class="input-group-prepend">
-              <span class="input-group-text">Content</span>
+              <span class="input-group-text">Biography</span>
             </div>
             <textarea
-              v-model="data.content"
+              v-model="user.biography"
               class="form-control"
               aria-label="With textarea"
             ></textarea>
@@ -37,7 +37,7 @@
                 type="file"
                 class="custom-file-input"
                 id="inputGroupFile01"
-                name="post_image"
+                name="profil_image"
                 ref="file"
               />
               <label class="custom-file-label" for="inputGroupFile01"
@@ -45,8 +45,8 @@
               >
             </div>
           </div>
-          <button class="w-100 btn btn-lg btn-success" type="submit">
-            Send
+          <button class="w-100 btn btn-lg btn-primary" type="submit">
+            Update
           </button>
         </div>
       </form>
@@ -56,53 +56,49 @@
 
 <script>
 import axios from "axios";
-
 export default {
-  name: "CreatePost",
+  name: "UpdateUser",
   data() {
     return {
-      data: {
-        title: "",
-        content: "",
+      user: {
+        email: "",
+        biography: "",
         image: "",
       },
     };
   },
   methods: {
     selectFile(e) {
-      this.data.image = e.target.files[0];
+      this.user.profil_image = e.target.files[0];
     },
-    async submit() {
+    update() {
       const formData = new FormData();
-      formData.append("title", this.data.title);
-      formData.append("content", this.data.content);
-      formData.append("post_image", this.data.image);
-      await axios
-        .post("http://localhost:3000/api/post/new", formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-          withCredentials: true,
-        })
+      formData.append("email", this.user.email);
+      formData.append("biography", this.user.biography);
+      formData.append("profil_image", this.user.profil_image);
+      axios
+        .put(
+          `http://localhost:3000/api/profil/${this.$route.params.id}`,
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+            withCredentials: true,
+          }
+        )
         .then((response) => {
           console.log(response);
-          alert("Post created");
-          this.$router.go();
+          this.$router.push("/Profile");
         })
-        .catch((err) => {
-          console.log(err);
+        .catch((error) => {
+          console.log(error);
         });
     },
   },
 };
 </script>
 
-<style>
-input.form-control {
-    height: 38px;
-    margin-bottom: 10px;
-}
-#app > main > div.container > div > form > div > div:nth-child(2) > div > span {
-    height: 63px;
-}
+<style scoped>
+
 </style>

@@ -1,38 +1,43 @@
-import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
-import Home from '../views/Home.vue'
-import Register from '../views/Register.vue'
-import Login from '../views/Login.vue'
-import Profile from '../views/Profile.vue'
-import UpdatePoste from '../views/UpdatePoste.vue'
-
+import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
+import Home from "../views/Home.vue";
+import Register from "../views/Register.vue";
+import Login from "../views/Login.vue";
+import Profile from "../views/Profile.vue";
+import UpdatePoste from "../views/UpdatePoste.vue";
+import UpdateUser from "../views/UpdateUser.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
-    path: '/',
+    path: "/",
     component: Home,
   },
   {
-    path: '/Login',
+    path: "/Login",
     component: Login,
   },
   {
-    path: '/Register',
+    path: "/Register",
     component: Register,
   },
   {
-    path: '/Profile',
+    path: "/Profile",
     component: Profile,
   },
   {
-    path: '/UpdatePoste/:idPost',
+    path: "/UpdatePoste/:idPost",
     component: UpdatePoste,
     props: true,
   },
-]
+  {
+    path: "/UpdateUser/:id",
+    component: UpdateUser,
+    props: true,
+  },
+];
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
-  routes
-})
+  routes,
+});
 
-export default router
+export default router;

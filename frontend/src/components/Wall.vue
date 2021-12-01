@@ -3,14 +3,27 @@
     <div class="container">
       <div class="row" v-for="post in data.posts" v-bind:key="post.id">
         <div class="col-md-12 post">
+          <h1 v-for="user in donnee" v-bind:key="user.id"><img class="img-user" v-if="post.idUSERS === user.id" v-bind:src="user.image" alt=""><h5  v-if="post.idUSERS === user.id">{{user.username}}</h5></h1>
           <img class="img-post" v-bind:src="post.image" alt="" />
-          <h1>{{ post.title }}{{ post.id }}</h1>
+          <h1>{{ post.title }}{{ post.idUSERS }}</h1>
           <p>
             {{ post.content }}
           </p>
           <span>Like {{ post.isLike }}</span>
-          <button @click="deletePost(post.id)">Supprimer</button>
-          <button @click="UpdatePost(post.id)">Update</button>
+          <button
+            type="button"
+            class="btn btn-danger"
+            @click="deletePost(post.id)"
+          >
+            Supprimer
+          </button>
+          <button
+            type="button"
+            class="btn btn-warning"
+            @click="UpdatePost(post.id)"
+          >
+            Update
+          </button>
         </div>
       </div>
     </div>
@@ -18,10 +31,12 @@
 </template>
 
 <script>
+import axios from "axios";
 export default {
   name: "Wall",
   watch: {
-    $route(to, from) { // on route change
+    $route(to, from) {
+      // on route change
       to.params.idPost;
     },
   },
@@ -33,6 +48,7 @@ export default {
   },
   beforeMount() {
     this.getName();
+    this.retriveUser();
   },
   methods: {
     async getName() {
@@ -55,6 +71,19 @@ export default {
     UpdatePost(idPost) {
       this.$router.push(`/UpdatePoste/${idPost}`);
     },
+    retriveUser() {
+      axios
+        .get("http://localhost:3000/api/profils", {
+          withCredentials: true,
+        })
+        .then((response) => {
+          this.donnee = response.data.users;
+          console.log(this.donnee);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
   },
 };
 </script>
@@ -71,5 +100,9 @@ export default {
   border-radius: 50px;
   padding: 25px;
   background-color: #ffd2bd;
+}
+img.img-user {
+    width: 20%;
+    border-radius: 50%;
 }
 </style>

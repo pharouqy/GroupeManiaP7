@@ -16,6 +16,6 @@ router.get("/logout", userCtrlr.logout); //logout
 router.get("/profil", userCtrlr.getUser); //get user
 router.get("/profils/", userCtrlr.getAllUsers); //get all users
 router.put("/profil/:id", authCookieCtrl, /*authCtrl,*/ multer.single("profil_image"), userCtrlr.updateUser); //update user
-router.delete('/profil/:id', authCookieCtrl, authCtrl, userCtrlr.deleteUser); //delete user
+router.delete('/profil/:id', authCookieCtrl, /*authCtrl,*/ userCtrlr.deleteUser); //delete user
 
 module.exports = router;

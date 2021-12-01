@@ -175,9 +175,9 @@ module.exports = {
             username: req.body.username
               ? req.body.username
               : userFound.username, // Ternaire
-            image: req.files
+            image: req.file
               ? `${req.protocol}://${req.get("host")}/images/profils/${
-                  req.files["profil_image"][0].filename
+                  req.file.filename
                 }`
               : userFound.image,
             email: req.body.email ? req.body.email : userFound.email,

@@ -1,7 +1,7 @@
 <template>
   <nav class="navbar navbar-expand-md navbar-dark bg-dark mb-4">
     <div class="container-fluid">
-      <router-link to="/" class="navbar-brand">Home</router-link>
+      <router-link to="/" class="navbar-brand"><img class="img-logo" src="../assets/icon-left-font.png" alt=""></router-link>
       <div>
         <ul class="navbar-nav me-auto mb-2 mb-md-0" v-if="!isLoggedIn">
           <li class="nav-item">
@@ -65,5 +65,10 @@ export default {
 };
 </script>
 
- <style scoped>
+ <style>
+ .img-logo {
+    width: 280%;
+    height: 80px;
+    object-fit: cover;
+}
 </style>

@@ -76,7 +76,7 @@ module.exports = {
   getAllPosts: (req, res, next) => {
     // Get all posts
     models.Post.findAll({
-      attributes: ["id", "title", "content", "image", "isLike"],
+      attributes: ["id", "idUSERS", "title", "content", "image", "isLike"],
     })
       .then((postsFound) => {
         if (postsFound) {
@@ -134,12 +134,11 @@ module.exports = {
           .update({
             title: title ? title : postFound.title,
             content: content ? content : postFound.content,
-            image:
-              req.file
-                ? `${req.protocol}://${req.get("host")}/images/posts/${
-                    req.file.filename
-                  }`
-                : postFound.image,
+            image: req.file
+              ? `${req.protocol}://${req.get("host")}/images/posts/${
+                  req.file.filename
+                }`
+              : postFound.image,
           })
           .then((postUpdated) => {
             res.status(200).json({
