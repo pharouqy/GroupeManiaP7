@@ -99,6 +99,7 @@ export default {
   },
   beforeMount() {
     this.getName();
+    this.retreiveAllComments();
   },
   methods: {
     submitComment(idPost) {
@@ -121,7 +122,8 @@ export default {
         )
         .then((response) => {
           console.log(response);
-          this.getName();
+          alert("Comment created");
+          this.$router.go();
         })
         .catch((error) => {
           console.log(error);
@@ -142,6 +144,24 @@ export default {
           if (data.message) {
             this.getName();
           }
+        });
+    },
+    deleteComment(idComment) {
+      axios
+        .delete(`http://localhost:3000/api/comments/${idComment}`, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+          credentials: "include",
+        })
+        .then((response) => {
+          alert("Comment deleted");
+          this.$router.go();
+          console.log(response);
+        })
+        .catch((error) => {
+          console.log(error);
         });
     },
     UpdatePost(idPost) {
