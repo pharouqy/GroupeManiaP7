@@ -20,13 +20,13 @@ module.exports = (sequelize, DataTypes) => {
       models.Comment.belongsTo(models.User, {
         foreignKey: "idPOSTS",
         as: "post",
-        onDelete: 'cascade',
+        onDelete: "cascade",
         hooks: true,
       });
       models.Comment.belongsTo(models.Post, {
         foreignKey: "idUSERS",
         as: "user",
-        onDelete: 'cascade',
+        onDelete: "cascade",
         hooks: true,
       });
     }
@@ -35,7 +35,9 @@ module.exports = (sequelize, DataTypes) => {
     {
       idUSERS: DataTypes.INTEGER,
       idPOSTS: DataTypes.INTEGER,
-      content: DataTypes.STRING,
+      content: {
+        type: DataTypes.STRING,
+      },
     },
     {
       sequelize,

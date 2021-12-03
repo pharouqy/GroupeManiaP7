@@ -7,8 +7,8 @@ const commentCtrl = require("../controllers/commentCotroller");
 const authComment = require("../middelware/authComment");
 const authCookieCtrl = require("../middelware/authCookies");
 
-router.post("/:idPost", authCookieCtrl, commentCtrl.createComment); // Create a new comment
-router.get("/:idPost", authComment, commentCtrl.getAllComments); // Get all comments
+router.post("/:idPost", /*authCookieCtrl,*/ commentCtrl.createComment); // Create a new comment
+router.get("/", /*authComment,*/ commentCtrl.getAllComments); // Get all comments
 //router.get("/", authCtrl, commentCtrl.getOneComment);
 router.put("/:idComment", authCookieCtrl, authComment, commentCtrl.updateComment); // Update a comment
 router.delete("/:idComment", authCookieCtrl, authComment, commentCtrl.deleteComment); // Delete a comment

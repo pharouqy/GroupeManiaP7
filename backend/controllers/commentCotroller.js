@@ -4,32 +4,31 @@ const models = require("../models"); // Import the models package
 require("dotenv").config(); //  Import the dotenv package
 
 module.exports = {
-  createComment: (req, res, next) => { //create comment
+  createComment: (req, res, next) => {
+    //create comment
     const token = req.cookies.token;
     const decoded = jwt.verify(token, process.env.SECRET_TOKEN);
     const userId = decoded.id;
     const postId = req.params.idPost;
     const { content } = req.body;
     models.Comment.create({
+      attributes: ["idUSERS", "idPOSTS", "content"],
       content: content,
       idUSERS: userId,
       idPOSTS: postId,
     })
       .then((comment) => {
-        res.status(201).json({ content: comment });
+        res.status(201).json({ content: comment});
       })
       .catch((error) => {
         res.status(500).json(error);
       });
   },
 
-  getAllComments: (req, res, next) => { //get all comments per post
-    const postId = req.params.idPost;
+  getAllComments: (req, res, next) => {
+    //get all comments per post
     models.Comment.findAll({
-      attributes: ["id", "content", "idUSERS", "idPOSTS"],
-      where: {
-        idPOSTS: postId,
-      },
+      attributes: ["id", "content", "idUSERS", "idPOSTS", "createdAt"],
     })
       .then((commentsFound) => {
         if (commentsFound) {
@@ -45,7 +44,8 @@ module.exports = {
 
   //getComment: (req, res, next) => {}, //TODO
 
-  updateComment: (req, res, next) => { // updateComment
+  updateComment: (req, res, next) => {
+    // updateComment
     const commentId = req.params.idComment;
     const { content } = req.body;
     models.Comment.update(
@@ -68,7 +68,8 @@ module.exports = {
       });
   },
 
-  deleteComment: (req, res, next) => { //deleteComment
+  deleteComment: (req, res, next) => {
+    //deleteComment
     const commentId = req.params.idComment;
     models.Comment.destroy({
       where: { id: commentId },
@@ -84,5 +85,4 @@ module.exports = {
         res.status(500).json(error);
       });
   },
-
 };
