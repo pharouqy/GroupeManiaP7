@@ -3,8 +3,7 @@ const jwt = require("jsonwebtoken"); // Import the jsonwebtoken package
 
 module.exports = {
   likePost: (req, res, next) => { // likePost
-    const headerAuth = req.headers["authorization"];
-    const token = headerAuth.replace("Bearer ", "");
+    const token = req.cookies.token;
     const decoded = jwt.verify(token, process.env.SECRET_TOKEN);
     const userId = decoded.id;
     const postId = req.params.idPost;
@@ -63,8 +62,7 @@ module.exports = {
       });
   },
   deslikePost: (req, res, next) => { // deslikePost
-    const headerAuth = req.headers["authorization"];
-    const token = headerAuth.replace("Bearer ", "");
+    const token = req.cookies.token;
     const decoded = jwt.verify(token, process.env.SECRET_TOKEN);
     const userId = decoded.id;
     const postId = req.params.idPost;

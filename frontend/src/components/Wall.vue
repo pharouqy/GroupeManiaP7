@@ -15,7 +15,11 @@
           <p>
             {{ post.content }}
           </p>
-          <span>Like {{ post.isLike }}</span>
+          <div>
+            <i class="far fa-thumbs-up" @click="like(post.id)"></i
+            ><i class="far fa-thumbs-down" @click="deslike(post.id)"></i>
+          </div>
+          <span class="LikeCount">Like {{ post.isLike }}</span>
           <button
             type="button"
             class="btn btn-danger"
@@ -89,6 +93,7 @@ export default {
   data() {
     return {
       data: {},
+      comments: [],
       content: "",
       idPost: null,
     };
@@ -99,9 +104,50 @@ export default {
   },
   beforeMount() {
     this.getName();
-    this.retreiveAllComments();
   },
   methods: {
+    deslike(idPost) {
+      axios
+        .post(
+          `http://localhost:3000/api/likeDeslike/${idPost}/deslike`,
+          {},
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+            withCredentials: true,
+            credentials: "include",
+          }
+        )
+        .then((response) => {
+          this.$router.go();
+          this.retreiveAllComments();
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    like(idPost) {
+      axios
+        .post(
+          `http://localhost:3000/api/likeDeslike/${idPost}/like`,
+          {},
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+            withCredentials: true,
+            credentials: "include",
+          }
+        )
+        .then((response) => {
+          this.$router.go();
+          this.retreiveAllPosts();
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
     submitComment(idPost) {
       //e.preventDefault();
       //const comment = e.target.comment.value;
@@ -212,5 +258,15 @@ export default {
 img.img-user {
   width: 20%;
   border-radius: 50%;
+}
+i.far.fa-thumbs-up,
+i.far.fa-thumbs-down {
+  margin-right: 10px;
+  font-size: 2rem;
+  cursor: pointer;
+}
+span.LikeCount {
+  font-size: 25px;
+  font-weight: 700;
 }
 </style>
