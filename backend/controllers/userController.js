@@ -5,7 +5,8 @@ const models = require("../models"); // Import the models package
 require("dotenv").config(); //  Import the dotenv package
 
 module.exports = {
-  register: (req, res, next) => { //register user
+  register: (req, res, next) => {
+    //register user
     // register a new user
     const { email, password, username, biography } = req.body;
     models.User.findOne({
@@ -51,7 +52,8 @@ module.exports = {
         });
       });
   },
-  login: (req, res) => { // login user
+  login: (req, res) => {
+    // login user
     // login a user
     const { email, password } = req.body;
     models.User.findOne({
@@ -70,7 +72,9 @@ module.exports = {
               process.env.SECRET_TOKEN,
               { expiresIn: "24h" }
             );
-            res.status(200).cookie('token', token, { maxAge: 9000000, httpOnly: false })
+            res
+              .status(200)
+              .cookie("token", token, { maxAge: 9000000, httpOnly: false });
             res.status(200).json({
               message: "User logged in",
               token: token,
@@ -95,21 +99,23 @@ module.exports = {
         }
       });
   },
-  logout: (req, res) => { // logout user
+  logout: (req, res) => {
+    // logout user
     // logout a user
     res.clearCookie("token");
     res.status(200).json({
       message: "User logged out",
     });
   },
-  getUser: (req, res) => { // get user
+  getUser: (req, res) => {
+    // get user
     // get a user
     const token = req.cookies.token;
     console.log(token);
     const decoded = jwt.verify(token, process.env.SECRET_TOKEN);
     const userId = decoded.id;
     models.User.findOne({
-      attributes: ["id", "username", "email","image", "biography", "isAdmin"],
+      attributes: ["id", "username", "email", "image", "biography", "isAdmin"],
       where: { id: userId },
     })
       .then((userFound) => {
@@ -137,7 +143,8 @@ module.exports = {
         }
       });
   },
-  getAllUsers: (req, res) => { // get all users
+  getAllUsers: (req, res) => {
+    // get all users
     // get all users
     models.User.findAll({
       attributes: ["id", "username", "image", "email", "biography"],
@@ -162,7 +169,8 @@ module.exports = {
         }
       });
   },
-  updateUser: (req, res) => { // update user
+  updateUser: (req, res) => {
+    // update user
     // update a user
     const userId = req.params.id;
     models.User.findOne({
@@ -171,28 +179,53 @@ module.exports = {
     })
       .then((userFound) => {
         if (userFound) {
-          userFound.update({
-            username: req.body.username
-              ? req.body.username
-              : userFound.username, // Ternaire
-            image: req.file
-              ? `${req.protocol}://${req.get("host")}/images/profils/${
-                  req.file.filename
-                }`
-              : userFound.image,
-            email: req.body.email ? req.body.email : userFound.email,
-            biography: req.body.biography
-              ? req.body.biography
-              : userFound.biography,
-          });
-          res.status(200).json({
-            message: "User updated",
-            id: userFound.id,
-            username: userFound.username,
-            image: userFound.image,
-            email: userFound.email,
-            biography: userFound.biography,
-          });
+          const filename = userFound.image.split("/images/profils")[1];
+          if (req.file == null) {
+            userFound.update({
+              username: req.body.username
+                ? req.body.username
+                : userFound.username, // Ternaire
+              image: userFound.image,
+              email: req.body.email ? req.body.email : userFound.email,
+              biography: req.body.biography
+                ? req.body.biography
+                : userFound.biography,
+            });
+            res.status(200).json({
+              message: "User updated",
+              id: userFound.id,
+              username: userFound.username,
+              image: userFound.image,
+              email: userFound.email,
+              biography: userFound.biography,
+            });
+          } else {
+            fs.unlink(
+              `images/profils/${filename}`,
+              (err) => {
+                if (err) throw err;
+                console.log("image was deleted");
+              },
+              userFound.update({
+                username: req.body.username
+                  ? req.body.username
+                  : userFound.username, // Ternaire
+                image: `${req.protocol}://${req.get("host")}/images/profils/${req.file.filename}`,
+                email: req.body.email ? req.body.email : userFound.email,
+                biography: req.body.biography
+                  ? req.body.biography
+                  : userFound.biography,
+              })
+            );
+            res.status(200).json({
+              message: "User updated",
+              id: userFound.id,
+              username: userFound.username,
+              image: userFound.image,
+              email: userFound.email,
+              biography: userFound.biography,
+            });
+          }
         } else {
           res.status(400).json({
             message: "User not found",
@@ -207,7 +240,8 @@ module.exports = {
         }
       });
   },
-  deleteUser: (req, res) => { // delete user
+  deleteUser: (req, res) => {
+    // delete user
     // delete a user
     const userId = req.params.id;
     models.User.findOne({
@@ -215,8 +249,16 @@ module.exports = {
       where: { id: userId },
     })
       .then((userFound) => {
+        const filename = userFound.image.split("/images/profils")[1];
         if (userFound) {
-          userFound.destroy();
+          fs.unlink(
+            `images/profils/${filename}`,
+            (err) => {
+              if (err) throw err;
+              console.log("image was deleted");
+            },
+            userFound.destroy()
+          );
           res.status(200).json({
             message: "User deleted",
           });

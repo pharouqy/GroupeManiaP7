@@ -76,7 +76,15 @@ module.exports = {
   getAllPosts: (req, res, next) => {
     // Get all posts
     models.Post.findAll({
-      attributes: ["id", "idUSERS", "title", "content", "image", "isLike", "createdAt"],
+      attributes: [
+        "id",
+        "idUSERS",
+        "title",
+        "content",
+        "image",
+        "isLike",
+        "createdAt",
+      ],
     })
       .then((postsFound) => {
         if (postsFound) {
@@ -100,26 +108,31 @@ module.exports = {
   deletePost: (req, res, next) => {
     // Delete post by id
     const postId = req.params.idPost;
-    models.Post.destroy({
+    models.Post.findOne({
+      attributes: ["id", "idUSERS", "title", "content", "image", "isLike"],
       where: { id: postId },
-    })
-      .then((postDeleted) => {
-        if (postDeleted) {
+    }).then((postFound) => {
+      const filename = postFound.image.split("/images/posts")[1];
+      if (postFound) {
+        fs.unlink(`images/posts/${filename}`, (err) => {
+          if (err) {
+            console.log(err);
+          }
+        });
+        models.Post.destroy({
+          where: { id: postId },
+        }).then((postDeleted) => {
           res.status(200).json({
             message: "Post deleted",
+            post: postDeleted,
           });
-        } else {
-          res.status(404).json({
-            message: "Post not found",
-          });
-        }
-      })
-      .catch((error) => {
-        res.status(500).json({
-          message: "Post not deleted",
-          error: error,
         });
-      });
+      } else {
+        res.status(404).json({
+          message: "Post not found",
+        });
+      }
+    });
   },
   updatePost: (req, res, next) => {
     // Update post by id
@@ -130,28 +143,53 @@ module.exports = {
       where: { id: postId },
     }).then((postFound) => {
       if (postFound) {
-        postFound
-          .update({
-            title: title ? title : postFound.title,
-            content: content ? content : postFound.content,
-            image: req.file
-              ? `${req.protocol}://${req.get("host")}/images/posts/${
-                  req.file.filename
-                }`
-              : postFound.image,
-          })
-          .then((postUpdated) => {
-            res.status(200).json({
-              message: "Post updated",
-              post: postUpdated,
+        const filename = postFound.image.split("/images/posts")[1];
+        if (req.file == null) {
+          postFound
+            .update({
+              title: title ? title : postFound.title,
+              content: content ? content : postFound.content,
+              image: postFound.image,
+            })
+            .then((postUpdated) => {
+              res.status(200).json({
+                message: "Post updated",
+                post: postUpdated,
+              });
+            })
+            .catch((error) => {
+              res.status(500).json({
+                message: "Post not updated",
+                error: error,
+              });
             });
-          })
-          .catch((error) => {
-            res.status(500).json({
-              message: "Post not updated",
-              error: error,
-            });
+        } else {
+          fs.unlink(`images/posts/${filename}`, (err) => {
+            if (err) {
+              console.log(err);
+            }
           });
+          postFound
+            .update({
+              title: title ? title : postFound.title,
+              content: content ? content : postFound.content,
+              image: `${req.protocol}://${req.get("host")}/images/posts/${
+                req.file.filename
+              }`,
+            })
+            .then((postUpdated) => {
+              res.status(200).json({
+                message: "Post updated",
+                post: postUpdated,
+              });
+            })
+            .catch((error) => {
+              res.status(500).json({
+                message: "Post not updated",
+                error: error,
+              });
+            });
+        }
       } else {
         res.status(404).json({
           message: "Post not found",
