@@ -34,7 +34,6 @@
 </template>
 
 <script lang="ts">
-import { computed } from "vue";
 import { useStore } from "vuex";
 import { useRouter } from "vue-router";
 

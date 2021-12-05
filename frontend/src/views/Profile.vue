@@ -72,12 +72,12 @@ import { useStore } from "vuex";
 
 export default {
   name: "Profile",
-  watch: {
+  /*watch: {
     $route(to, from) {
       // on route change
       return to.params.id;
     },
-  },
+  },*/
   data() {
     return {
       data: {
@@ -109,12 +109,14 @@ export default {
     },
     deleteUser(id) {
       axios
-        .delete(`http://localhost:3000/api/profil/${id}`, {
+        .delete(`http://localhost:3000/api/delete/${id}`, {
           withCredentials: true,
         })
         .then((response) => {
-          this.data = response.data;
-          this.$router.push("/Profile");
+          if (response) {
+            alert("User deleted");
+            this.$router.push("/Login");
+          }
         })
         .catch((error) => {
           console.log(error);

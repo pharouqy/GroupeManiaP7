@@ -1,7 +1,8 @@
 const jwt = require("jsonwebtoken");
 const fs = require("fs");
 const models = require("../models"); // Import the models package
-require("dotenv").config(); //  Import the dotenv package
+require("dotenv").config();
+const sequelize = require("sequelize"); //  Import the dotenv package
 
 module.exports = {
   createPost: (req, res, next) => {
@@ -83,7 +84,7 @@ module.exports = {
         "content",
         "image",
         "isLike",
-        "createdAt",
+        [sequelize.fn('date_format', sequelize.col('createdAt'), '%d %M %Y - %H:%i:%s '), 'createdAt'],
       ],
     })
       .then((postsFound) => {

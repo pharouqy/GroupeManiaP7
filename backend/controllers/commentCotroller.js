@@ -1,4 +1,4 @@
-const fs = require("fs");
+const sequelize = require('sequelize');
 const jwt = require("jsonwebtoken");
 const models = require("../models"); // Import the models package
 require("dotenv").config(); //  Import the dotenv package
@@ -28,7 +28,7 @@ module.exports = {
   getAllComments: (req, res, next) => {
     //get all comments per post
     models.Comment.findAll({
-      attributes: ["id", "content", "idUSERS", "idPOSTS", "createdAt"],
+      attributes: ["id", "content", "idUSERS", "idPOSTS", [sequelize.fn('date_format', sequelize.col('createdAt'), '%d %M %Y - %H:%i:%s '), 'createdAt'],],
     })
       .then((commentsFound) => {
         if (commentsFound) {

@@ -15,12 +15,12 @@ app.use(express.urlencoded({ extended: true }));
 app.use(helmet());
 app.use(cookieParser());
 
-const cors = require("cors");
-const corsOptions = {
+//const cors = require("cors");
+/*const corsOptions = {
    origin:'http://localhost:8080', 
    credentials:true,            //access-control-allow-credentials:true
    optionSuccessStatus:200,
-};
+};*/
 
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "http://localhost:8080");
@@ -35,7 +35,7 @@ app.use((req, res, next) => {
 
 app.use("/images", express.static(path.join(__dirname, "images")));
 
-app.use(cors(corsOptions)) // Use this after the variable declaration
+//app.use(cors(corsOptions)) // Use this after the variable declaration
 
 app.use("/api", userRouter);
 app.use("/api/post", postRouter);

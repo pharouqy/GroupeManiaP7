@@ -78,7 +78,7 @@ export default {
       formData.append("profil_image", this.user.profil_image);
       axios
         .put(
-          `http://localhost:3000/api/profil/${this.$route.params.id}`,
+          `http://localhost:3000/api/update/${this.$route.params.id}`,
           formData,
           {
             headers: {

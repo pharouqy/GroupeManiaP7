@@ -36,6 +36,7 @@
           </button>
           <div>
             <form @submit.prevent="submitComment(post.id)">
+              <h3>Commentaire</h3>
               <textarea
                 v-model="data.content"
                 name="comment"
@@ -57,13 +58,9 @@
                 </div>
                 <p>{{ comment.content }}</p>
                 <p>{{ comment.createdAt }}</p>
-                <button
-                  type="button"
-                  class="btn btn-danger"
-                  @click="deleteComment(comment.id)"
-                >
-                  Supprimer
-                </button>
+                <a @click="deleteComment(comment.id)" class="">
+                  <i class="fas fa-trash-alt"></i>
+                </a>
                 <button
                   type="button"
                   class="btn btn-warning"
@@ -82,6 +79,8 @@
 
 <script>
 import axios from "axios";
+import moment from "moment";
+
 export default {
   name: "Wall",
   /*watch: {
@@ -106,6 +105,9 @@ export default {
     this.getName();
   },
   methods: {
+    moment: function () {
+      return moment();
+    },
     deslike(idPost) {
       axios
         .post(
@@ -169,7 +171,7 @@ export default {
         .then((response) => {
           console.log(response);
           alert("Comment created");
-          this.$router.go();
+          this.$router.go(); // refresh page
         })
         .catch((error) => {
           console.log(error);

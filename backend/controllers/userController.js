@@ -28,6 +28,9 @@ module.exports = {
                 username: username,
                 password: hash,
                 email: email,
+                image: `${req.protocol}://${req.get(
+                  "host"
+                )}/images/user/profil.png`,
                 biography: biography,
                 isAdmin: 0,
               })
@@ -179,53 +182,30 @@ module.exports = {
     })
       .then((userFound) => {
         if (userFound) {
-          const filename = userFound.image.split("/images/profils")[1];
-          if (req.file == null) {
-            userFound.update({
-              username: req.body.username
-                ? req.body.username
-                : userFound.username, // Ternaire
-              image: userFound.image,
-              email: req.body.email ? req.body.email : userFound.email,
-              biography: req.body.biography
-                ? req.body.biography
-                : userFound.biography,
-            });
-            res.status(200).json({
-              message: "User updated",
-              id: userFound.id,
-              username: userFound.username,
-              image: userFound.image,
-              email: userFound.email,
-              biography: userFound.biography,
-            });
-          } else {
-            fs.unlink(
-              `images/profils/${filename}`,
-              (err) => {
-                if (err) throw err;
-                console.log("image was deleted");
-              },
-              userFound.update({
-                username: req.body.username
-                  ? req.body.username
-                  : userFound.username, // Ternaire
-                image: `${req.protocol}://${req.get("host")}/images/profils/${req.file.filename}`,
-                email: req.body.email ? req.body.email : userFound.email,
-                biography: req.body.biography
-                  ? req.body.biography
-                  : userFound.biography,
-              })
-            );
-            res.status(200).json({
-              message: "User updated",
-              id: userFound.id,
-              username: userFound.username,
-              image: userFound.image,
-              email: userFound.email,
-              biography: userFound.biography,
-            });
-          }
+          userFound.update({
+            attributes: ["id", "email", "username", "image", "biography"],
+            where: { id: userId },
+            username: req.body.username
+              ? req.body.username
+              : userFound.username, // Ternaire
+            image: req.file
+              ? `${req.protocol}://${req.get("host")}/images/profils/${
+                  req.file.filename
+                }`
+              : userFound.image,
+            email: req.body.email ? req.body.email : userFound.email,
+            biography: req.body.biography
+              ? req.body.biography
+              : userFound.biography,
+          });
+          res.status(200).json({
+            message: "User updated",
+            id: userFound.id,
+            username: userFound.username,
+            image: userFound.image,
+            email: userFound.email,
+            biography: userFound.biography,
+          });
         } else {
           res.status(400).json({
             message: "User not found",
@@ -233,11 +213,10 @@ module.exports = {
         }
       })
       .catch((error) => {
-        if (error) {
-          res.status(500).json({
-            message: "Unable to update user",
-          });
-        }
+        res.status(500).json({
+          message: "Unable to update user",
+          error: error,
+        });
       });
   },
   deleteUser: (req, res) => {
@@ -245,24 +224,17 @@ module.exports = {
     // delete a user
     const userId = req.params.id;
     models.User.findOne({
-      attributes: ["id", "username", "image", "email", "biography"],
+      attributes: ["id"],
       where: { id: userId },
     })
       .then((userFound) => {
-        const filename = userFound.image.split("/images/profils")[1];
         if (userFound) {
-          fs.unlink(
-            `images/profils/${filename}`,
-            (err) => {
-              if (err) throw err;
-              console.log("image was deleted");
-            },
-            userFound.destroy()
-          );
+          userFound.destroy();
           res.status(200).json({
             message: "User deleted",
           });
-        } else {
+        }
+        else {
           res.status(400).json({
             message: "User not found",
           });
