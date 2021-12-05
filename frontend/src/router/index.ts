@@ -33,6 +33,10 @@ const routes: Array<RouteRecordRaw> = [
     component: UpdateUser,
     props: true,
   },
+  {
+    path: "/Profiles",
+    component: () => import("../views/Profiles.vue"),
+  },
 ];
 
 const router = createRouter({

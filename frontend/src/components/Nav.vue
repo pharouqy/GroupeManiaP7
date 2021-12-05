@@ -1,7 +1,9 @@
 <template>
   <nav class="navbar navbar-expand-md navbar-dark bg-dark mb-4">
     <div class="container-fluid">
-      <router-link to="/" class="navbar-brand"><img class="img-logo" src="../assets/icon-left-font.png" alt=""></router-link>
+      <router-link to="/" class="navbar-brand"
+        ><img class="img-logo" src="../assets/icon-left-font.png" alt=""
+      /></router-link>
       <div>
         <ul class="navbar-nav me-auto mb-2 mb-md-0" v-if="!isLoggedIn">
           <li class="nav-item">
@@ -15,15 +17,17 @@
         </ul>
         <ul class="navbar-nav me-auto mb-2 mb-md-0" v-if="isLoggedIn">
           <li class="nav-item">
+            <router-link to="/Profiles" class="nav-link active"
+              >Profiles</router-link
+            >
+          </li>
+          <li class="nav-item">
             <router-link to="/Profile" class="nav-link active"
               >Profile</router-link
             >
           </li>
           <li class="nav-item">
-            <router-link
-              to="#"
-              class="nav-link active"
-              @click="lougout()"
+            <router-link to="#" class="nav-link active" @click="lougout()"
               >Lougout</router-link
             >
           </li>
@@ -43,7 +47,7 @@ export default {
     isLoggedIn() {
       const store = useStore();
       return store.state.authenticated;
-    }
+    },
   },
   setup() {
     const router = useRouter();
@@ -72,9 +76,9 @@ export default {
 </script>
 
  <style>
- .img-logo {
-    width: 280%;
-    height: 80px;
-    object-fit: cover;
+.img-logo {
+  width: 280%;
+  height: 80px;
+  object-fit: cover;
 }
 </style>

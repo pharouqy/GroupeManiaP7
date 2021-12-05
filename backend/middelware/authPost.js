@@ -6,6 +6,8 @@ module.exports = (req, res, next) => {
   const token = req.cookies.token;
   const decoded = jwt.verify(token, process.env.SECRET_TOKEN);
   const userId = decoded.id;
+  const userRole = decoded.isAdmin;
+  console.log(userRole);
   const postId = req.params.idPost;
   models.Post.findOne({
     attributes: ["id", "idUSERS"],
@@ -13,7 +15,7 @@ module.exports = (req, res, next) => {
       id: postId,
     },
   }).then((post) => {
-    if (post.idUSERS == userId) {
+    if (post.idUSERS == userId || userRole == 1) {
       next();
     } else {
       res.status(401).json({

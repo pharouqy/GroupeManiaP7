@@ -150,7 +150,7 @@ module.exports = {
     // get all users
     // get all users
     models.User.findAll({
-      attributes: ["id", "username", "image", "email", "biography"],
+      attributes: ["id", "username", "image", "email", "biography", "isAdmin"],
     })
       .then((usersFound) => {
         if (usersFound) {
