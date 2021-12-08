@@ -79,7 +79,6 @@
 
 <script>
 import axios from "axios";
-import moment from "moment";
 
 export default {
   name: "Wall",
@@ -105,9 +104,6 @@ export default {
     this.getName();
   },
   methods: {
-    moment: function () {
-      return moment();
-    },
     deslike(idPost) {
       axios
         .post(
@@ -122,10 +118,12 @@ export default {
           }
         )
         .then((response) => {
+          alert("deslike");
           this.$router.go();
           this.retreiveAllComments();
         })
         .catch((error) => {
+          alert("You have already deslike this post");
           console.log(error);
         });
     },
@@ -143,10 +141,11 @@ export default {
           }
         )
         .then((response) => {
+          alert("like");
           this.$router.go();
-          this.retreiveAllPosts();
         })
         .catch((error) => {
+          alert("You have already like this post");
           console.log(error);
         });
     },

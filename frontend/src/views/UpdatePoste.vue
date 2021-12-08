@@ -16,6 +16,7 @@
               class="form-control"
               aria-label="Large"
               aria-describedby="inputGroup-sizing-sm"
+              :placeholder="dato.title"
             />
           </div>
           <div class="input-group">
@@ -26,6 +27,7 @@
               v-model="data.content"
               class="form-control"
               aria-label="With textarea"
+              :placeholder="dato.content"
             ></textarea>
           </div>
           <div class="input-group mb-3">
@@ -61,12 +63,16 @@ export default {
   name: "UpdatePost",
   data() {
     return {
+      dato: {},
       data: {
         title: "",
         content: "",
         post_image: "",
       },
     };
+  },
+  mounted() {
+    this.getData(this.$route.params.idPost);
   },
   methods: {
     selectFile(e) {
@@ -89,7 +95,26 @@ export default {
           }
         )
         .then((response) => {
+          this.$confirm("Are you sure?").then(() => {
+            if (response.data.success) {
+              this.$router.push("/");
+            } else {
+              this.$message.error(response.data.message);
+            }
+            //do something...
+          });
           this.$router.push("/");
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
+    getData(PostId) {
+      axios
+        .get(`http://localhost:3000/api/post/${PostId}`)
+        .then((response) => {
+          this.dato = response.data.post;
+          console.log(this.dato);
         })
         .catch((error) => {
           console.log(error);

@@ -15,6 +15,7 @@
               class="form-control"
               aria-label="Large"
               aria-describedby="inputGroup-sizing-sm"
+              :placeholder="user.email"
             />
           </div>
           <div class="input-group">
@@ -25,6 +26,7 @@
               v-model="user.biography"
               class="form-control"
               aria-label="With textarea"
+              :placeholder="user.Biography"
             ></textarea>
           </div>
           <div class="input-group mb-3">
@@ -67,6 +69,9 @@ export default {
       },
     };
   },
+  mounted() {
+    this.getData();
+  },
   methods: {
     selectFile(e) {
       this.user.profil_image = e.target.files[0];
@@ -95,6 +100,19 @@ export default {
           console.log(error);
         });
     },
+      getData() {
+    axios
+      .get(`http://localhost:3000/api/profil`, {
+        withCredentials: true,
+      })
+      .then((response) => {
+        this.user = response.data;
+        console.log(this.user);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  },
   },
 };
 </script>
