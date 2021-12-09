@@ -191,6 +191,9 @@ export default {
           if (data.message) {
             this.getName();
           }
+        }).catch((error) => {
+          alert("You can't delete this post");
+          console.log(error);
         });
     },
     deleteComment(idComment) {

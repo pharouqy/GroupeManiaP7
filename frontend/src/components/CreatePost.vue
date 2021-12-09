@@ -15,6 +15,7 @@
               class="form-control"
               aria-label="Large"
               aria-describedby="inputGroup-sizing-sm"
+              required
             />
           </div>
           <div class="input-group">
@@ -25,6 +26,7 @@
               v-model="data.content"
               class="form-control"
               aria-label="With textarea"
+              required
             ></textarea>
           </div>
           <div class="input-group mb-3">
@@ -90,6 +92,7 @@ export default {
           this.$router.go();
         })
         .catch((err) => {
+          alert("You are not logged in");
           console.log(err);
         });
     },
@@ -99,10 +102,10 @@ export default {
 
 <style>
 input.form-control {
-    height: 38px;
-    margin-bottom: 10px;
+  height: 38px;
+  margin-bottom: 10px;
 }
 #app > main > div.container > div > form > div > div:nth-child(2) > div > span {
-    height: 63px;
+  height: 63px;
 }
 </style>

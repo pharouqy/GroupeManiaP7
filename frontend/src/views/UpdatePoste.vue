@@ -94,15 +94,7 @@ export default {
             withCredentials: true,
           }
         )
-        .then((response) => {
-          this.$confirm("Are you sure?").then(() => {
-            if (response.data.success) {
-              this.$router.push("/");
-            } else {
-              this.$message.error(response.data.message);
-            }
-            //do something...
-          });
+        .then((res) => {
           this.$router.push("/");
         })
         .catch((error) => {

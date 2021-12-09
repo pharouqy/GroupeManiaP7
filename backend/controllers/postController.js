@@ -84,7 +84,14 @@ module.exports = {
         "content",
         "image",
         "isLike",
-        [sequelize.fn('date_format', sequelize.col('createdAt'), '%d %M %Y - %H:%i:%s '), 'createdAt'],
+        [
+          sequelize.fn(
+            "date_format",
+            sequelize.col("createdAt"),
+            "%d %M %Y - %H:%i:%s "
+          ),
+          "createdAt",
+        ],
       ],
     })
       .then((postsFound) => {
@@ -113,21 +120,34 @@ module.exports = {
       attributes: ["id", "idUSERS", "title", "content", "image", "isLike"],
       where: { id: postId },
     }).then((postFound) => {
-      const filename = postFound.image.split("/images/posts")[1];
       if (postFound) {
-        fs.unlink(`images/posts/${filename}`, (err) => {
-          if (err) {
-            console.log(err);
-          }
-        });
-        models.Post.destroy({
-          where: { id: postId },
-        }).then((postDeleted) => {
-          res.status(200).json({
-            message: "Post deleted",
-            post: postDeleted,
+        const filename = postFound.image
+          ? postFound.image.split("/images/posts/")[1]
+          : null;
+        if (fs.existsSync(`./images/posts/${filename}`)) {
+          fs.unlink(`images/posts/${filename}`, (err) => {
+            if (err) {
+              console.log(err);
+            }
           });
-        });
+          models.Post.destroy({
+            where: { id: postId },
+          }).then((postDeleted) => {
+            res.status(200).json({
+              message: "Post deleted",
+              post: postDeleted,
+            });
+          });
+        } else {
+          models.Post.destroy({
+            where: { id: postId },
+          }).then((postDeleted) => {
+            res.status(200).json({
+              message: "Post deleted",
+              post: postDeleted,
+            });
+          });
+        }
       } else {
         res.status(404).json({
           message: "Post not found",
@@ -143,8 +163,10 @@ module.exports = {
       attributes: ["id", "title", "content", "image", "isLike"],
       where: { id: postId },
     }).then((postFound) => {
+      const filename = postFound.image
+      ? postFound.image.split("/images/posts/")[1]
+      : null;
       if (postFound) {
-        const filename = postFound.image.split("/images/posts")[1];
         if (req.file == null) {
           postFound
             .update({
@@ -164,7 +186,7 @@ module.exports = {
                 error: error,
               });
             });
-        } else {
+        } else if (fs.existsSync(`./images/posts/${filename}`)) {
           fs.unlink(`images/posts/${filename}`, (err) => {
             if (err) {
               console.log(err);
