@@ -15,7 +15,7 @@
               class="form-control"
               aria-label="Large"
               aria-describedby="inputGroup-sizing-sm"
-              :placeholder="user.email"
+              :placeholder="data.email"
             />
           </div>
           <div class="input-group">
@@ -26,7 +26,7 @@
               v-model="user.biography"
               class="form-control"
               aria-label="With textarea"
-              :placeholder="user.Biography"
+              :placeholder="data.biography"
             ></textarea>
           </div>
           <div class="input-group mb-3">
@@ -62,6 +62,7 @@ export default {
   name: "UpdateUser",
   data() {
     return {
+      data: {},
       user: {
         email: "",
         biography: "",
@@ -106,8 +107,7 @@ export default {
         withCredentials: true,
       })
       .then((response) => {
-        this.user = response.data;
-        console.log(this.user);
+        this.data = response.data;
       })
       .catch((error) => {
         console.log(error);
