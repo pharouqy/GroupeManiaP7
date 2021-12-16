@@ -1,7 +1,11 @@
 <template>
   <div class="home">
     <div class="container">
-      <div class="row" v-for="post in data.posts" v-bind:key="post.id">
+      <div
+        class="row"
+        v-for="post in data.posts.slice().reverse()"
+        v-bind:key="post.id"
+      >
         <div class="col-md-12 post">
           <div v-for="user in donnee" v-bind:key="user.id">
             <div v-if="post.idUSERS === user.id">
@@ -79,6 +83,7 @@
 
 <script>
 import axios from "axios";
+import { useStore } from "vuex";
 
 export default {
   name: "Wall",
@@ -176,10 +181,29 @@ export default {
           console.log(error);
         });
     },
-    async getName() {
+    /*async getName() {
       const res = await fetch("http://localhost:3000/api/post");
       const data = await res.json();
       this.data = data;
+    },*/
+    getName() {
+      const store = useStore();
+      axios
+        .get("http://localhost:3000/api/post", {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+          credentials: "include",
+        })
+        .then((response) => {
+          this.data = response.data;
+          store.dispatch("setAuthenticated", true);
+        })
+        .catch((error) => {
+          store.dispatch("setAuthenticated", false);
+          console.log(error);
+        });
     },
     async deletePost(idPost) {
       await fetch("http://localhost:3000/api/post/" + idPost, {
@@ -191,7 +215,8 @@ export default {
           if (data.message) {
             this.getName();
           }
-        }).catch((error) => {
+        })
+        .catch((error) => {
           alert("You can't delete this post");
           console.log(error);
         });
@@ -211,6 +236,7 @@ export default {
           console.log(response);
         })
         .catch((error) => {
+          alert("You can't delete this comment");
           console.log(error);
         });
     },

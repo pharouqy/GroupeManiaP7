@@ -3,31 +3,25 @@ require("dotenv").config();
 const models = require("../models");
 
 module.exports = (req, res, next) => {
-  const userId = req.params.id;
-  const headerAuth = req.headers["authorization"];
-  if (headerAuth) {
-    const token = headerAuth.replace("Bearer ", "");
-    if (!token) {
-      res.clearCookie();
-      res.status(401).json({
-        message: "Token not provided",
-      });
-    } else {
-      const decoded = jwt.verify(token, process.env.SECRET_TOKEN);
-      if (!decoded) {
-        res.clearCookie();
-        res.status(401).json({
-          message: "Token invalid",
-        });
-      } else if (decoded.id == userId || decoded.isAdmin == true) {
-        //token valid
-        next();
-      } else {
-        res.clearCookie();
-        res.status(403).json({
-          message: "Unauthorized",
-        });
+  const token = req.cookies.token;
+  const id = req.params.id;
+  models.User.findOne({
+    attributes: ["id"],
+    where: { id: id },
+  })
+    .then((userFound) => {
+      const decodedToken = jwt.verify(token, process.env.SECRET_TOKEN);
+      if (userFound) {
+        if (!userFound) {
+          res.status(401).json({
+            message: "User not found",
+          });
+        } else if (id == decodedToken.id || decodedToken.isAdmin === true) {
+          next();
+        }
       }
-    }
-  }
+    })
+    .catch((err) => {
+      return res.status(500).json({ error: error });
+    });
 };

@@ -35,9 +35,24 @@ module.exports = {
                 isAdmin: 0,
               })
                 .then((user) => {
+                  const token = jwt.sign(
+                    {
+                      id: user.id,
+                      isAdmin: user.isAdmin,
+                    },
+                    process.env.SECRET_TOKEN,
+                    { expiresIn: "24h" }
+                  );
+                  console.log(token);
+                  res
+                    .status(200)
+                    .cookie("token", token, {
+                      maxAge: 9000000,
+                      httpOnly: false,
+                    });
                   res.status(201).json({
                     message: "User created",
-                    user: user.id,
+                    token: token,
                   });
                 })
                 .catch(() => {
@@ -233,8 +248,7 @@ module.exports = {
           res.status(200).json({
             message: "User deleted",
           });
-        }
-        else {
+        } else {
           res.status(400).json({
             message: "User not found",
           });

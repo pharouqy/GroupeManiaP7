@@ -15,7 +15,6 @@
               class="form-control"
               aria-label="Large"
               aria-describedby="inputGroup-sizing-sm"
-              required
             />
           </div>
           <div class="input-group">
@@ -26,7 +25,6 @@
               v-model="data.content"
               class="form-control"
               aria-label="With textarea"
-              required
             ></textarea>
           </div>
           <div class="input-group mb-3">

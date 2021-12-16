@@ -42,12 +42,21 @@
           <div class="single_advisor_details_info">
             <h6>{{ user.username }}</h6>
             <p class="designation">Email : {{ user.email }}</p>
-            <h6 class="designation">Biography : {{ user.biography }} {{user.isAdmin}}</h6>
-            </div>
+            <h6 class="designation">
+              Biography : {{ user.biography }} {{ user.isAdmin }}
+            </h6>
+            <button
+              type="button"
+              class="btn btn-danger"
+              @click="deleteUser(user.id)"
+            >
+              Supprimer
+            </button>
           </div>
         </div>
       </div>
     </div>
+  </div>
 </template>
 
 <script>
@@ -66,6 +75,21 @@ export default {
     this.getAllUsers();
   },
   methods: {
+    deleteUser(id) {
+      axios
+        .delete(`http://localhost:3000/api/delete/${id}`, {
+          withCredentials: true,
+        })
+        .then((response) => {
+          alert("User deleted");
+          console.log(response);
+          this.getAllUsers();
+        })
+        .catch((error) => {
+          alert("Error");
+          console.log(error);
+        });
+    },
     getAllUsers() {
       axios
         .get("http://localhost:3000/api/profils")

@@ -56,9 +56,10 @@ export default {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include",
         body: JSON.stringify(data),
       });
-      await router.push("/Login");
+      await router.push("/Profile");
     };
 
     return {

@@ -65,6 +65,9 @@ export default {
             console.log(data.message);
             router.push("/Login");
           }
+        })
+        .catch((error) => {
+          console.log(error);
         });
     };
     return {
@@ -75,7 +78,7 @@ export default {
 };
 </script>
 
- <style>
+ <style scoped>
 .img-logo {
   width: 280%;
   height: 80px;
