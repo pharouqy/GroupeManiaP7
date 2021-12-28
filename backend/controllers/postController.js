@@ -164,8 +164,8 @@ module.exports = {
       where: { id: postId },
     }).then((postFound) => {
       const filename = postFound.image
-      ? postFound.image.split("/images/posts/")[1]
-      : null;
+        ? postFound.image.split("/images/posts/")[1]
+        : null;
       if (postFound) {
         if (req.file == null) {
           postFound

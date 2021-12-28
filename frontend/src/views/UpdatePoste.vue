@@ -95,9 +95,11 @@ export default {
           }
         )
         .then((res) => {
+          alert(res.data.message);
           this.$router.push("/");
         })
         .catch((error) => {
+          alert(error.response.data.message);
           console.log(error);
         });
     },
