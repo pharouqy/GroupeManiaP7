@@ -15,7 +15,7 @@
           </div>
           <img class="img-post" v-bind:src="post.image" alt="" />
           <span>{{ post.createdAt }}</span>
-          <h1>{{ post.title }}{{ post.idUSERS }}</h1>
+          <h1>{{ post.title }}</h1>
           <p>
             {{ post.content }}
           </p>
