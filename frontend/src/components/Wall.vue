@@ -118,8 +118,8 @@ export default {
             headers: {
               "Content-Type": "application/json",
             },
-            withCredentials: true,
-            credentials: "include",
+            withCredentials: true, // send cookies
+            credentials: "include", // include cookies in request
           }
         )
         .then((response) => {

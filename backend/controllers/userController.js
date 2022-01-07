@@ -8,7 +8,7 @@ module.exports = {
   register: (req, res, next) => {
     //register user
     // register a new user
-    const { email, password, username, biography } = req.body;
+    const { email, password, username, biography } = req.body; // destructuring
     models.User.findOne({
       attributes: ["email"],
       where: { email: email },
@@ -44,16 +44,8 @@ module.exports = {
                     { expiresIn: "24h" }
                   );
                   console.log(token);
-                  res
-                    .status(200)
-                    .cookie("token", token, {
-                      maxAge: 9000000,
-                      httpOnly: false,
-                    });
-                  res.status(201).json({
-                    message: "User created",
-                    token: token,
-                  });
+                  res.status(200).cookie("token", token, { maxAge: 9000000, httpOnly: false,}); // set cookie
+                  res.status(201).json({message: "User created",token: token,});
                 })
                 .catch(() => {
                   res.status(500).json({
@@ -73,7 +65,7 @@ module.exports = {
   login: (req, res) => {
     // login user
     // login a user
-    const { email, password } = req.body;
+    const { email, password } = req.body; // destructuring
     models.User.findOne({
       attributes: ["id", "username", "email", "password", "isAdmin"],
       where: { email: email },
