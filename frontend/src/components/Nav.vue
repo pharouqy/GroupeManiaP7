@@ -38,14 +38,13 @@
 </template>
 
 <script lang="ts">
-import { useStore } from "vuex";
+import store from "../store/index";
 import { useRouter } from "vue-router";
 
 export default {
   name: "Nav",
   computed: {
     isLoggedIn() {
-      const store = useStore();
       return store.state.authenticated;
     },
   },

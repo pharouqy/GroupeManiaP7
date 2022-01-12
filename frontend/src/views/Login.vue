@@ -25,9 +25,7 @@ export default {
       email: '',
       password: '',
     });
-
     const router = useRouter();
-
     const submit = async () => {
       console.log(data);
       await fetch('http://localhost:3000/api/login', {

@@ -90,7 +90,7 @@ export default {
           this.$router.go();
         })
         .catch((err) => {
-          alert("You are not logged in");
+          alert("Post not created");
           console.log(err);
         });
     },
